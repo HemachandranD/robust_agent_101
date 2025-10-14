@@ -1,0 +1,54 @@
+# Responsible AI Configuration
+# Add more items to these lists as needed
+
+# Input/Output validation limits
+limits:
+  max_input_length: 500
+  min_input_length: 3
+  max_output_length: 500
+
+# Profanity patterns (regex)
+profanity_patterns:
+  - fuck
+  - shit
+  - damn
+  - asshole
+
+# Negative words to detect in outputs
+negative_words:
+  - hate
+  - stupid
+  - idiot
+  - dumb
+
+# Sensitive topics to avoid
+sensitive_topics:
+  - violence
+  - illegal
+  - drugs
+  - weapon
+
+# Code injection patterns (regex)
+code_patterns:
+  - exec
+  - eval
+  - "<?php"
+  - "script>"
+  - import\s+os
+
+# Vague responses to reject
+vague_responses:
+  - "i don't know"
+  - "not sure"
+  - "idk"
+
+# Stop words for relevance checking
+stop_words:
+  - the
+  - a
+  - is
+  - what
+  - how
+  - an
+  - to
+  - of

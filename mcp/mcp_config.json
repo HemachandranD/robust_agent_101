@@ -1,0 +1,11 @@
+{
+    "mcpServers": {
+        "hai_mcp_server": {
+            "command": "python",
+            "args": [
+                "mcp/server.py"
+            ],
+            "transport": "stdio"
+        }   
+    }
+}
