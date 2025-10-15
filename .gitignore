@@ -147,3 +147,9 @@ cython_debug/
 .DS_Store
 Thumbs.db
 
+# Project specific
+data/
+*.db
+*.sqlite
+*.sqlite3
+test_*.py
