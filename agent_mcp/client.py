@@ -16,7 +16,7 @@ class MCPClient:
         # Server parameters from config
         server_params = StdioServerParameters(
             command="python",
-            args=["mcp/server.py"],
+            args=["agent_mcp/server.py"],
             env=None
         )
         
@@ -89,16 +89,13 @@ async def demo():
         # List available tools
         await client.list_tools()
         
-        # Example 1: Calculate
-        await client.call_tool("calculate", {"expression": "2 + 2 * 3"})
-        
-        # Example 2: Get stock quote
+        # Example 1: Get stock quote
         await client.call_tool("get_stock", {"symbol": "AAPL"})
         
-        # Example 3: Generate ASCII art
+        # Example 2: Generate ASCII art
         await client.call_tool("generate_art", {"text": "MCP", "font": "block"})
         
-        # Example 4: Web search
+        # Example 3: Web search
         await client.call_tool("web_search", {"query": "Python MCP protocol"})
         
     finally:

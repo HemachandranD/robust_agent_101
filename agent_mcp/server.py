@@ -1,7 +1,5 @@
-import requests, sympy
-from fastapi import HTTPException
+import requests
 from mcp.server.fastmcp import FastMCP
-from pydantic import BaseModel
 from dotenv import load_dotenv
 from bs4 import BeautifulSoup
 import yfinance as yf
@@ -11,45 +9,39 @@ load_dotenv()
 
 mcp = FastMCP(name="hai_mcp_server")
 
-# Model for stock request
-class StockRequest(BaseModel):
-    symbol: str = "AAPL"
-
-# Model for ASCII art request
-class ArtRequest(BaseModel):
-    text: str
-    font: str = "block"  # Default font; options from pyfiglet/art libs
-
-
-# Stock Quote
+# Stock Quote - accepts plain symbol string
 @mcp.tool()
-async def get_stock(request: StockRequest):
+async def get_stock(symbol: str = "AAPL"):
+    """Get real-time stock quotes for a given symbol"""
     try:
-        stock = yf.Ticker(request.symbol.upper())
+        stock = yf.Ticker(symbol.upper())
         info = stock.info
         return {
-            "symbol": request.symbol,
+            "symbol": symbol,
             "price": info.get("currentPrice", "N/A"),
             "change": info.get("regularMarketChange", "N/A"),
-            "volume": info.get("volume", "N/A")
+            "volume": info.get("volume", "N/A"),
+            "company": info.get("longName", "N/A")
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to fetch {request.symbol}: {str(e)}")
+        return {"error": f"Failed to fetch {symbol}: {str(e)}"}
 
 
-# ASCII Art
+# ASCII Art - accepts plain text string
 @mcp.tool()
-async def generate_art(request: ArtRequest):
+async def generate_art(text: str, font: str = "block"):
+    """Generate ASCII art from text"""
     try:
-        art = text2art(request.text, font=request.font)
+        art = text2art(text, font=font)
         return {"art": art}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to generate art: {str(e)}")
+        return {"error": f"Failed to generate art: {str(e)}"}
 
 
 # Web Search
 @mcp.tool()
-def web_search(query: str):
+async def web_search(query: str):
+    """Search the web using DuckDuckGo"""
     try:
         url = f"https://duckduckgo.com/html/?q={query}"
         headers = {"User-Agent": "Mozilla/5.0"}
@@ -63,17 +55,19 @@ def web_search(query: str):
         return {"error": f"Search failed: {str(e)}"}
 
 
-# Math
+# Math Calculator
 @mcp.tool()
-def calculate(expression: str):
+async def calculate(expression: str):
+    """Evaluate mathematical expressions"""
     try:
+        import sympy
         result = sympy.sympify(expression).evalf()
-        return {"result": float(result)}
+        return {"result": float(result), "expression": expression}
     except Exception as e:
         return {"error": f"Calculation failed: {str(e)}"}
 
 
 if __name__ == "__main__":
-    print("[INFO] Starting HAI MCP Servers")
+    print("[INFO] Starting HAI MCP Server")
     print("[INFO] Tools: get_stock, generate_art, web_search, calculate")
     mcp.run(transport="stdio")

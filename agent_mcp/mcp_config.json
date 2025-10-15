@@ -3,7 +3,7 @@
         "hai_mcp_server": {
             "command": "python",
             "args": [
-                "mcp/server.py"
+                "agent_mcp/server.py"
             ],
             "transport": "stdio"
         }   
